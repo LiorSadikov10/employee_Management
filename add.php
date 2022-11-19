@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <?php
+        // check that the add button has been clicked
+        if(isset($_POST['button'])){
+            // extraction of information sent in variables by the method POST
+            extract($_POST);
+            // check that all fields have been completed
+            if(isset($firstName) && isset($lastName) && ($age)){
+                // database connection
+                include_once "connection.php";
+                // add request
+                $req = mysqli_query($con, "INSERT INTO Employee VALUES(NULL, '$firstName', '$lastName', '$age')");
+                if($req){ //if the request has been made successfully, we make a redirection
+                    header("Location:index.php");
+                }else{ //if not
+                    $message = "Employee not Added";
+                }
+            }else{
+                //if not
+                $message = "please complete all fields";
+            }
+        }
+    ?>
+    <div class="form">
+        <a href="index.php" class="back_btn"><img src="images/back.png">Return</a>
+        <h2>Add Employee</h2>
+        <p class="error_message">
+            <?php
+                // if the message variable exists, display its content
+                if(isset($message)){
+                    echo $message;
+                }
+            ?>
+        </p>
+        <form action="" method="POST">
+            <label>First Name</label>
+            <input type="text" name="firstName">
+            <label>Last Name</label>
+            <input type="text" name="lastName">
+            <label>Age</label>
+            <input type="number" name="age">
+            <input type="submit" value="Add" name="button">
+        </form>
+    </div>
+</body>
+</html>
